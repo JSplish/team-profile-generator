@@ -1,5 +1,10 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
+const Manager = require('./lib/Manager');
+const Engineer = require('./lib/Engineer');
+const Intern = require('./lib/Intern');
+const generateHTML = require('./src/generateHtml');
+let roster = [];
 
 const managerQuestions = () => {
     return inquirer.prompt([  // Difference between return inquirer.prompt and inquirer.prompt ????
@@ -32,11 +37,15 @@ const managerQuestions = () => {
         
     ])
 
-    .then(({ addMember }) => {
-        if (addMember === 'Engineer') {
-            engineerQuestions();
-        } else if (addMember === 'Intern') {
-            internQuestions();
+    .then(({ addMember, name, id, email, role, officeNumber }) => {
+        roster.push(new Manager(officeNumber, name, id, email, role ));
+        console.log("roster = ", roster);
+        if (addMember === "Add Engineer") {
+          engineerQuestions();
+        } else if (addMember === "Add Intern") {
+          internQuestions();
+        } else {
+          createHTML(roster);
         }
     })
 }
@@ -70,11 +79,15 @@ const engineerQuestions = () => {
             choices: ['Engineer', 'Intern', 'I do not want to add any more team members'],
         }
     ])
-    .then(({ addMember }) => {
-        if (addMember === 'Engineer') {
-            engineerQuestions();
-        } else if (addMember === 'Intern') {
-            internQuestions();
+    .then(({ addMember, name, id, email, role, officeNumber }) => {
+        roster.push(new Manager(officeNumber, name, id, email, role ));
+        console.log("roster = ", roster);
+        if (addMember === "Add Engineer") {
+          engineerQuestions();
+        } else if (addMember === "Add Intern") {
+          internQuestions();
+        } else {
+          createHTML(roster);
         }
     })
 }
@@ -108,16 +121,25 @@ const internQuestions = () => {
             choices: ['Engineer', 'Intern', 'I do not want to add any more team members'],
         }
     ])
-    .then(({ addMember }) => {
-        if (addMember === 'Engineer') {
-            engineerQuestions();
-        } else if (addMember === 'Intern') {
-            internQuestions();
+    .then(({ addMember, name, id, email, role, officeNumber }) => {
+        roster.push(new Manager(officeNumber, name, id, email, role ));
+        console.log("roster = ", roster);
+        if (addMember === "Add Engineer") {
+          engineerQuestions();
+        } else if (addMember === "Add Intern") {
+          internQuestions();
+        } else {
+          createHTML(roster);
         }
     })
 }
 
-managerQuestions();
+const createHTML = (roster) => {
+    const html =  generateHTML(roster);
+    fs.writeFile('./src/index.html', html, function (err){
+      if (err) throw err;
+      console.log('HTML file generated');
+    });
+  };
 
-// write to file
-// constructor in lIBRARY 
+managerQuestions();
