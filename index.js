@@ -3,7 +3,7 @@ const fs = require('fs');
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
-const generateHTML = require('./src/generateHtml');
+const generateTeam = require('./src/generateHtml');
 let roster = [];
 
 const managerQuestions = () => {
@@ -37,12 +37,12 @@ const managerQuestions = () => {
         
     ])
 
-    .then(({ addMember, name, id, email, role, officeNumber }) => {
-        roster.push(new Manager(officeNumber, name, id, email, role ));
+    .then(({ name, id, email, officeNumber, addMember }) => {
+        roster.push(new Manager(officeNumber, name, id, email, addMember));
         console.log("roster = ", roster);
-        if (addMember === "Add Engineer") {
+        if (addMember === "Engineer") {
           engineerQuestions();
-        } else if (addMember === "Add Intern") {
+        } else if (addMember === "Intern") {
           internQuestions();
         } else {
           createHTML(roster);
@@ -79,12 +79,12 @@ const engineerQuestions = () => {
             choices: ['Engineer', 'Intern', 'I do not want to add any more team members'],
         }
     ])
-    .then(({ addMember, name, id, email, role, officeNumber }) => {
-        roster.push(new Manager(officeNumber, name, id, email, role ));
+    .then(({ name, id, email, github, addMember }) => {
+        roster.push(new Engineer(github, name, id, email, addMember ));
         console.log("roster = ", roster);
-        if (addMember === "Add Engineer") {
+        if (addMember === "Engineer") {
           engineerQuestions();
-        } else if (addMember === "Add Intern") {
+        } else if (addMember === "Intern") {
           internQuestions();
         } else {
           createHTML(roster);
@@ -121,12 +121,12 @@ const internQuestions = () => {
             choices: ['Engineer', 'Intern', 'I do not want to add any more team members'],
         }
     ])
-    .then(({ addMember, name, id, email, role, officeNumber }) => {
-        roster.push(new Manager(officeNumber, name, id, email, role ));
+    .then(({ name, id, email, school, addMember }) => {
+        roster.push(new Intern(school, name, id, email, addMember ));
         console.log("roster = ", roster);
-        if (addMember === "Add Engineer") {
+        if (addMember === "Engineer") {
           engineerQuestions();
-        } else if (addMember === "Add Intern") {
+        } else if (addMember === "Intern") {
           internQuestions();
         } else {
           createHTML(roster);
@@ -134,11 +134,11 @@ const internQuestions = () => {
     })
 }
 
-const createHTML = (roster) => {
-    const html =  generateHTML(roster);
-    fs.writeFile('./src/index.html', html, function (err){
+  const createHTML = (roster) => {
+    const html = generateTeam(roster);
+    fs.writeFile("./dist/index.html", html, function (err) {
       if (err) throw err;
-      console.log('HTML file generated');
+      console.log("HTML file generated");
     });
   };
 

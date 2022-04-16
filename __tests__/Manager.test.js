@@ -1,7 +1,7 @@
 const Manager = require('../lib/Manager.js')
 
-test('creates the Manager object', () => {
-    const manager = new Manager('Jordan', 'office');
+test('creates the Manager office', () => {
+    const manager = new Manager('111');
 
-    expect(manager.officeNumber).toEqual(expect.any(String))
+    expect(manager.office).toEqual(expect.any(String))
 })
